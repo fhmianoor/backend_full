@@ -2,7 +2,7 @@ import Otp from "./model.js";
 
 import generateOtp from "../util/generateOtp.js";
 import dotenv from "dotenv";
-import { hashData } from "../util/hashData.js";
+import { hashData, verifyHash } from "../util/hashData.js";
 import sendEmail from "../util/sendEmailOtp.js";
 
 dotenv.config();
@@ -47,4 +47,35 @@ export const sendOtp = async (email, subject, message, duration =1) => {
     
 }
 
+export const verifyOtp = async (email, otp) => {
+    if (!(otp && email)) {
+        throw new Error("provide email and otp");
+    }
+    const otpDocument = await Otp.findOne({ email });
 
+    if(!otpDocument) {
+        throw new Error("OTP not found");
+    }
+
+    const {expiresAt} = otpDocument;
+    if(expiresAt < new Date()) {
+        throw new Error("OTP expired");
+    }
+    const hashedOtp = otpDocument.otp;
+    const isOtpMatch = await verifyHash(otp, hashedOtp);
+    return isOtpMatch;
+
+    if(!isOtpMatch) {
+        throw new Error("Invalid OTP");
+    }
+
+   
+}
+
+export const deleteOtp = async (email) => {
+    try {
+        await Otp.deleteOne({ email });
+    } catch (error) {
+        throw new Error("Error deleting OTP: " + error.message);
+    }
+}
