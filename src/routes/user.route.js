@@ -1,5 +1,6 @@
 import express from "express";
 import { registerUser, authenticateUser } from "../controller/user.controller.js";
+import { authMiddleware } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -55,8 +56,6 @@ router.post("/register", async (req, res) => {
     }
 });
 
-
-
 router.post("/login", async (req, res) => {
     try{
         let { email, password } = req.body
@@ -83,5 +82,13 @@ router.post("/login", async (req, res) => {
 
 
 })
+
+router.get("/profile", authMiddleware, (req, res) => {
+    return res.status(200).json({
+        message: "Profile retrieved successfully",
+        user: req.currentUser,
+    });
+});
+
 
 export default router;
