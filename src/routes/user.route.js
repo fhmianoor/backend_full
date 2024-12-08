@@ -1,6 +1,7 @@
 import express from "express";
 import { registerUser, authenticateUser } from "../controller/user.controller.js";
 import { authMiddleware } from "../middleware/auth.js";
+import otpRoute from "../otp/otp.route.js";
 
 const router = express.Router();
 
@@ -89,6 +90,8 @@ router.get("/profile", authMiddleware, (req, res) => {
         user: req.currentUser,
     });
 });
+
+router.use("/otp", otpRoute);
 
 
 export default router;
