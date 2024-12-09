@@ -3,7 +3,7 @@ import { sendOtp, verifyOtp } from "./otp.controller.js";
 const router = express.Router();
 
 // Route untuk generate OTP
-router.post("/generate", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const { email, subject, message, duration } = req.body;
         const otp = await sendOtp(email, subject, message, duration);

@@ -2,6 +2,7 @@ import express from "express";
 import { registerUser, authenticateUser } from "../controller/user.controller.js";
 import { authMiddleware } from "../middleware/auth.js";
 import otpRoute from "../otp/otp.route.js";
+import emailRoute from "../email_verify/email.route.js";
 
 const router = express.Router();
 
@@ -78,7 +79,11 @@ router.post("/login", async (req, res) => {
             },
         })
     }catch(error){
-        throw new Error(error.message || "Failed to login user")
+        if(error.message == "Invalid password"){
+            return res.status(401).json({ message: "Invalid password" });
+        }else{
+            return res.status(404).json({ message: "Email is not registered" });
+        }
     }
 
 
@@ -92,6 +97,7 @@ router.get("/profile", authMiddleware, (req, res) => {
 });
 
 router.use("/otp", otpRoute);
+router.use("/email_verify", emailRoute);
 
 
 export default router;

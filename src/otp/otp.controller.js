@@ -41,8 +41,8 @@ export const sendOtp = async (email, subject, message, duration =1) => {
         return savedOtp;
 
     } catch (error) {
-        console.error("Gagal mengirim OTP:", error);
-        throw new Error("Gagal mengirim OTP: " + error.message);
+        console.error("Otp failed to send:", error);
+        throw new Error("Otp failed to send : " + error.message);
     }
     
 }
@@ -65,9 +65,7 @@ export const verifyOtp = async (email, otp) => {
     const isOtpMatch = await verifyHash(otp, hashedOtp);
     return isOtpMatch;
 
-    if(!isOtpMatch) {
-        throw new Error("Invalid OTP");
-    }
+    
 
    
 }
