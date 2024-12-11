@@ -38,6 +38,10 @@ export const authenticateUser = async (data) => {
             throw new Error("User does not exist")
         }
 
+        if(!fetchedUser.verify){
+            throw new Error("User is not verified")
+        }
+
         const hashedPassword = fetchedUser.password
         const isMatch = await verifyHash(password, hashedPassword)
         if(!isMatch){

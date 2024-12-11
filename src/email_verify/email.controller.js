@@ -30,6 +30,8 @@ export const verifyEmailOtp = async (email, otp) => {
             throw new Error("Invalid OTP");
         }
 
+        await User.updateOne({email}, {verify: true})
+
         await deleteOtp(email);
         return true;
     }catch(error){

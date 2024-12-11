@@ -3,6 +3,9 @@ import { registerUser, authenticateUser } from "../controller/user.controller.js
 import { authMiddleware } from "../middleware/auth.js";
 import otpRoute from "../otp/otp.route.js";
 import emailRoute from "../email_verify/email.route.js";
+import { verifyEmail } from "../email_verify/email.controller.js";
+
+
 
 const router = express.Router();
 
@@ -36,6 +39,7 @@ router.post("/register", async (req, res) => {
                 .json({ message: "Password must be at least 8 characters long" });
         }
 
+        
         // Create user
         const user = await registerUser({
             username: trimmedUsername,
@@ -43,6 +47,8 @@ router.post("/register", async (req, res) => {
             password: trimmedPassword,
         });
 
+        await verifyEmail(user.email)
+       
         // Return success response
         return res.status(201).json({
             message: "User created successfully",
@@ -50,6 +56,7 @@ router.post("/register", async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
+                verify: user.verify,
             },
         });
     } catch (error) {
@@ -69,6 +76,7 @@ router.post("/login", async (req, res) => {
         }
 
         const user = await authenticateUser({email, password})
+
         return res.status(200).json({
             message: "Login successful",
             user: {
