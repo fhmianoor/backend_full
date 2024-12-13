@@ -4,6 +4,7 @@ import { authMiddleware } from "../middleware/auth.js";
 import otpRoute from "../otp/otp.route.js";
 import emailRoute from "../email_verify/email.route.js";
 import { verifyEmail } from "../email_verify/email.controller.js";
+import forgotPasswordRoute from "../forgot_password/route.js";
 
 
 
@@ -106,6 +107,7 @@ router.get("/profile", authMiddleware, (req, res) => {
 
 router.use("/otp", otpRoute);
 router.use("/email_verify", emailRoute);
+router.use("/forgot_password", forgotPasswordRoute);
 
 
 export default router;
